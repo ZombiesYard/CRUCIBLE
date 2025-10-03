@@ -1,6 +1,8 @@
 
 # CRUCIBLE — CommonRoad Unified Code & Invariant Builder with LLM Engines — README (Quickstart for New Users)
 
+This repository accompanies the paper “LLM-Assisted Tool for Joint Generation of Formulas and Functions in Rule-Based Verification of Map Transformations.” 
+
 **Goal:** this document helps people who has never touched this repository run the LLM-based 3-D rule generator(CRUCIBLE） and the included smoke test, even if their folder layout differs from yours.
 
 > TL;DR: You must first **clone and install the official CommonRoad Scenario Designer (CRD)** as per their [GitHub](https://github.com/CommonRoad/commonroad-scenario-designer) instructions. Without CRD installed correctly, the smoke test cannot run — you will only see generated files (prompts, diffs) under `.llm_artifacts/`.
