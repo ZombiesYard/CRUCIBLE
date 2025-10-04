@@ -326,3 +326,21 @@ If you see `InvalidState(formula=<LaneletFormulaID.MIN_VERTICAL_CLEARANCE: 'min_
 - OpenDRIVE example maps and CRD 3D XMLs included here were handcrafted for demonstration and testing.
 
 Good luck, and enjoy!
+
+
+
+
+Contact：
+
+M.Sc. Ruidi He
+ruidi.he@tu-clausthal.de
+
+B.Sc. Yu Zhang
+yu.zhang.1@tu-clausthal.de
+
+Dr. Meng Zhang
+meng.zhang@tu-clausthal.de
+
+Prof. Dr. Andreas Rausch
+andreas.rausch@tu-clausthal.de
+
