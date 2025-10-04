@@ -1,0 +1,939 @@
+# FILE: crdesigner/verification_repairing/verification/formula_ids.py
+import enum
+from typing import List, Union
+
+# All supported formulas are listed here. The formulas are divided into different types depending on the
+# type of the CommonRoad element.
+
+@enum.unique
+class GeneralFormulaID(enum.Enum):
+    """The IDs of formulas that describe the properties of all types of elements."""
+
+    UNIQUE_ID = "unique_id_all"
+
+
+@enum.unique
+class LaneletFormulaID(enum.Enum):
+    """The IDs of formulas that describe the properties of a lanelet."""
+
+    UNIQUE_ID = "unique_id_la"
+    SAME_VERTICES_SIZE = "same_vertices_size"
+    VERTICES_MORE_THAN_ONE = "vertices_more_than_one"
+    EXISTENCE_LEFT_ADJ = "existence_left_adj"
+    EXISTENCE_RIGHT_ADJ = "existence_right_adj"
+    EXISTENCE_PREDECESSOR = "existence_predecessor"
+    EXISTENCE_SUCCESSOR = "existence_successor"
+    CONNECTIONS_PREDECESSOR = "connections_predecessor"
+    CONNECTIONS_SUCCESSOR = "connections_successor"
+    POLYLINES_LEFT_SAME_DIR_PARALLEL_ADJ = "polylines_left_same_dir_parallel_adj"
+    POLYLINES_LEFT_OPPOSITE_DIR_PARALLEL_ADJ = "polylines_left_opposite_dir_parallel_adj"
+    POLYLINES_RIGHT_SAME_DIR_PARALLEL_ADJ = "polylines_right_same_dir_parallel_adj"
+    POLYLINES_RIGHT_OPPOSITE_DIR_PARALLEL_ADJ = "polylines_right_opposite_dir_parallel_adj"
+    CONNECTIONS_LEFT_MERGING = "connections_left_merging_adj"
+    CONNECTIONS_RIGHT_MERGING = "connections_right_merging_adj"
+    CONNECTIONS_LEFT_FORKING = "connections_left_forking_adj"
+    CONNECTIONS_RIGHT_FORKING = "connections_right_forking_adj"
+    POTENTIAL_SUCCESSOR = "potential_successor"
+    POTENTIAL_PREDECESSOR = "potential_predecessor"
+    POTENTIAL_LEFT_SAME_DIR_PARALLEL_ADJ = "potential_left_same_dir_parallel_adj"
+    POTENTIAL_LEFT_OPPOSITE_DIR_PARALLEL_ADJ = "potential_left_opposite_dir_parallel_adj"
+    POTENTIAL_RIGHT_SAME_DIR_PARALLEL_ADJ = "potential_right_same_dir_parallel_adj"
+    POTENTIAL_RIGHT_OPPOSITE_DIR_PARALLEL_ADJ = "potential_right_opposite_dir_parallel_adj"
+    POTENTIAL_LEFT_MERGING_ADJ = "potential_left_merging_adj"
+    POTENTIAL_RIGHT_MERGING_ADJ = "potential_right_merging_adj"
+    POTENTIAL_LEFT_FORKING_ADJ = "potential_left_forking_adj"
+    POTENTIAL_RIGHT_FORKING_ADJ = "potential_right_forking_adj"
+    NON_PREDECESSOR_AS_SUCCESSOR = "non_predecessor_as_successor"
+    NON_SUCCESSOR_AS_PREDECESSOR = "non_successor_as_predecessor"
+    POLYLINES_INTERSECTION = "polylines_intersection"
+    LEFT_SELF_INTERSECTION = "left_self_intersection"
+    RIGHT_SELF_INTERSECTION = "right_self_intersection"
+    LANELET_TYPES_COMBINATION = "lanelet_types_combination"
+    # NON_FOLLOWED_COMPOSABLE_LANELETS = 'non_followed_composable_lanelets'
+    # REFERENCED_INTERSECTING_LANELETS = 'referenced_intersecting_lanelets'
+    EXISTENCE_TRAFFIC_SIGNS = "existence_traffic_signs"
+    EXISTENCE_TRAFFIC_LIGHTS = "existence_traffic_lights"
+    EXISTENCE_STOP_LINE_TRAFFIC_SIGNS = "existence_stop_line_traffic_signs"
+    EXISTENCE_STOP_LINE_TRAFFIC_LIGHTS = "existence_stop_line_traffic_lights"
+    INCLUDED_STOP_LINE_TRAFFIC_SIGNS = "included_stop_line_traffic_signs"
+    INCLUDED_STOP_LINE_TRAFFIC_LIGHTS = "included_stop_line_traffic_lights"
+    ZERO_OR_TWO_POINTS_STOP_LINE = "zero_or_two_points_stop_line"
+    STOP_LINE_POINTS_ON_POLYLINES = "stop_line_points_on_polylines"
+    STOP_LINE_REFERENCES = "stop_line_references"
+    CONFLICTING_LANELET_DIRECTIONS = "conflicting_lanelet_directions"
+    LEFT_RIGHT_BOUNDARY_ASSIGNMENT = "left_right_boundary_assignment"
+
+
+
+@enum.unique
+class TrafficSignFormulaID(enum.Enum):
+    """The IDs of formulas that describe the properties of a traffic sign."""
+
+    AT_LEAST_ONE_TRAFFIC_SIGN_ELEMENT = "at_least_one_traffic_sign_element"
+    REFERENCED_TRAFFIC_SIGN = "referenced_traffic_sign"
+    GIVEN_ADDITIONAL_VALUE = "given_additional_value"
+    VALUE_ADDITIONAL_VALUE_SPEED_SIGN = "valid_additional_value_speed_sign"
+    MAXIMAL_DISTANCE_FROM_LANELET = "maximal_distance_from_lanelet"
+
+
+@enum.unique
+class TrafficLightFormulaID(enum.Enum):
+    """The IDs of formulas that describe the properties of a traffic light."""
+
+    AT_LEAST_ONE_CYCLE_ELEMENT = "at_least_one_cycle_element"
+    # TRAFFIC_LIGHT_PER_INCOMING = 'traffic_light_per_incoming'
+    REFERENCED_TRAFFIC_LIGHT = "referenced_traffic_light"
+    NON_ZERO_DURATION = "non_zero_duration"
+    UNIQUE_STATE_IN_CYCLE = "unique_state_in_cycle"
+    CYCLE_STATE_COMBINATIONS = "cycle_state_combinations"
+    # EXISTENCE_OUTGOING_RIGHT = 'existence_outgoing_right'
+    # EXISTENCE_OUTGOING_STRAIGHT = 'existence_outgoing_straight'
+    # EXISTENCE_OUTGOING_LEFT = 'existence_outgoing_left'
+
+
+@enum.unique
+class IntersectionFormulaID(enum.Enum):
+    """The IDs of formulas that describe the properties of an intersection."""
+
+    AT_LEAST_TWO_INCOMING_ELEMENTS = "at_least_two_incoming_elements"
+    AT_LEAST_ONE_INCOMING_LANELET = "at_least_one_incoming_lanelet"
+    EXISTENCE_IS_LEFT_OF = "existence_is_left_of"
+    EXISTENCE_INCOMING_LANELETS = "existence_incoming_lanelets"
+    INCOMING_INTERSECTION = "incoming_intersection"
+
+
+FormulaID = Union[
+    LaneletFormulaID,
+    TrafficSignFormulaID,
+    TrafficLightFormulaID,
+    IntersectionFormulaID,
+    GeneralFormulaID,
+]
+FormulaTypes = [
+    LaneletFormulaID,
+    TrafficSignFormulaID,
+    TrafficLightFormulaID,
+    IntersectionFormulaID,
+    GeneralFormulaID,
+]
+
+
+def extract_formula_id(string: str) -> Union[None, FormulaID]:
+    """
+    Extracts ID of formula from string.
+
+    :param string: String.
+    :return: Formula ID; none if the string cannot be matched.
+    """
+    for formula_id in extract_formula_ids():
+        if formula_id.value == string:
+            return formula_id
+
+    return None
+
+
+def extract_formula_ids() -> List[FormulaID]:
+    """
+    Extracts all formula IDs.
+
+    :return: Formula IDs.
+    """
+    formula_ids = []
+    for formula_id_type in FormulaTypes:
+        for formula_id in formula_id_type:
+            formula_ids.append(formula_id)
+
+    return formula_ids
+
+
+def extract_formula_ids_from_strings(strings: List[str]) -> List[FormulaID]:
+    """
+    Extracts IDs of formulas from strings.
+
+    :param strings: Strings.
+    :return: Formula IDs.
+    """
+    ids = []
+
+    for formula_id in extract_formula_ids():
+        if formula_id.value in strings:
+            ids.append(formula_id)
+
+    return ids
+
+
+def extract_formula_ids_by_type(formula_type: enum.EnumMeta) -> List[FormulaID]:
+    """
+    Extracts all IDs of formulas from a specific type.
+
+    :param formula_type: Formula type.
+    :return: Formula IDs of formula type.
+    """
+    formula_ids_of_type = []
+    for formula_id_of_type in formula_type:
+        formula_ids_of_type.append(formula_id_of_type)
+
+    return formula_ids_of_type
+
+
+def filter_formula_ids_by_type(
+    formula_ids: List[FormulaID], formula_type: enum.EnumMeta
+) -> List[FormulaID]:
+    """
+    Filters the IDs of formulas by a specific formula type.
+
+    :param formula_ids: Formula IDs.
+    :param formula_type: Formula type.
+    :return: Formula IDs.
+    """
+    formula_ids_of_type = extract_formula_ids_by_type(formula_type)
+
+    return list(set(formula_ids).intersection(set(formula_ids_of_type)))
+
+
+
+# FILE: crdesigner/verification_repairing/verification/groups_handler.py
+import dataclasses
+from queue import PriorityQueue
+from typing import List
+
+from crdesigner.verification_repairing.verification.formula_ids import (
+    FormulaID,
+    GeneralFormulaID,
+    IntersectionFormulaID,
+    LaneletFormulaID,
+    TrafficLightFormulaID,
+    TrafficSignFormulaID,
+)
+
+
+@dataclasses.dataclass
+class SpecificationGroup:
+    priority: int
+    formulas: List[FormulaID]
+
+
+@dataclasses.dataclass
+class GroupsHandler:
+    """Class representing the handler of the specification groups."""
+
+    groups: List[SpecificationGroup] = dataclasses.field(
+        default_factory=lambda: [
+            SpecificationGroup(
+                priority=0,
+                formulas=[
+                    LaneletFormulaID.LEFT_RIGHT_BOUNDARY_ASSIGNMENT,
+                    GeneralFormulaID.UNIQUE_ID,
+                ],
+            ),
+            SpecificationGroup(
+                priority=1,
+                formulas=[
+                    LaneletFormulaID.POLYLINES_INTERSECTION,
+                    LaneletFormulaID.LEFT_SELF_INTERSECTION,
+                    LaneletFormulaID.RIGHT_SELF_INTERSECTION,
+                ],
+            ),
+            SpecificationGroup(
+                priority=2,
+                formulas=[
+                    LaneletFormulaID.SAME_VERTICES_SIZE,
+                    LaneletFormulaID.VERTICES_MORE_THAN_ONE,
+                    TrafficLightFormulaID.AT_LEAST_ONE_CYCLE_ELEMENT,
+                    IntersectionFormulaID.AT_LEAST_ONE_INCOMING_LANELET,
+                    TrafficSignFormulaID.AT_LEAST_ONE_TRAFFIC_SIGN_ELEMENT,
+                    LaneletFormulaID.STOP_LINE_REFERENCES,
+                    LaneletFormulaID.CONFLICTING_LANELET_DIRECTIONS,
+                ],
+            ),
+            SpecificationGroup(
+                priority=15,
+                formulas=[
+                    LaneletFormulaID.EXISTENCE_SUCCESSOR,
+                    LaneletFormulaID.EXISTENCE_PREDECESSOR,
+                    LaneletFormulaID.EXISTENCE_LEFT_ADJ,
+                    LaneletFormulaID.EXISTENCE_RIGHT_ADJ,
+                    LaneletFormulaID.POTENTIAL_SUCCESSOR,
+                    LaneletFormulaID.POTENTIAL_PREDECESSOR,
+                    LaneletFormulaID.POTENTIAL_LEFT_SAME_DIR_PARALLEL_ADJ,
+                    LaneletFormulaID.POTENTIAL_LEFT_OPPOSITE_DIR_PARALLEL_ADJ,
+                    LaneletFormulaID.POTENTIAL_RIGHT_SAME_DIR_PARALLEL_ADJ,
+                    LaneletFormulaID.POTENTIAL_RIGHT_OPPOSITE_DIR_PARALLEL_ADJ,
+                    LaneletFormulaID.POTENTIAL_LEFT_MERGING_ADJ,
+                    LaneletFormulaID.POTENTIAL_RIGHT_MERGING_ADJ,
+                    LaneletFormulaID.POTENTIAL_LEFT_FORKING_ADJ,
+                    LaneletFormulaID.POTENTIAL_RIGHT_FORKING_ADJ,
+                    LaneletFormulaID.NON_PREDECESSOR_AS_SUCCESSOR,
+                    LaneletFormulaID.NON_SUCCESSOR_AS_PREDECESSOR,
+                    LaneletFormulaID.EXISTENCE_TRAFFIC_SIGNS,
+                    LaneletFormulaID.EXISTENCE_TRAFFIC_LIGHTS,
+                    LaneletFormulaID.EXISTENCE_STOP_LINE_TRAFFIC_SIGNS,
+                    LaneletFormulaID.EXISTENCE_STOP_LINE_TRAFFIC_LIGHTS,
+                    IntersectionFormulaID.EXISTENCE_IS_LEFT_OF,
+                    IntersectionFormulaID.EXISTENCE_INCOMING_LANELETS,
+                    IntersectionFormulaID.AT_LEAST_TWO_INCOMING_ELEMENTS,
+                ],
+            ),
+            SpecificationGroup(
+                priority=20,
+                formulas=[
+                    LaneletFormulaID.CONNECTIONS_SUCCESSOR,
+                    LaneletFormulaID.CONNECTIONS_PREDECESSOR,
+                    LaneletFormulaID.POLYLINES_LEFT_SAME_DIR_PARALLEL_ADJ,
+                    LaneletFormulaID.POLYLINES_LEFT_OPPOSITE_DIR_PARALLEL_ADJ,
+                    LaneletFormulaID.POLYLINES_RIGHT_OPPOSITE_DIR_PARALLEL_ADJ,
+                    LaneletFormulaID.POLYLINES_RIGHT_SAME_DIR_PARALLEL_ADJ,
+                    LaneletFormulaID.CONNECTIONS_LEFT_MERGING,
+                    LaneletFormulaID.CONNECTIONS_RIGHT_MERGING,
+                    LaneletFormulaID.CONNECTIONS_LEFT_FORKING,
+                    LaneletFormulaID.CONNECTIONS_RIGHT_FORKING,
+                    LaneletFormulaID.LANELET_TYPES_COMBINATION,
+                    LaneletFormulaID.INCLUDED_STOP_LINE_TRAFFIC_SIGNS,
+                    LaneletFormulaID.INCLUDED_STOP_LINE_TRAFFIC_LIGHTS,
+                    LaneletFormulaID.ZERO_OR_TWO_POINTS_STOP_LINE,
+                    LaneletFormulaID.STOP_LINE_POINTS_ON_POLYLINES,
+                    TrafficSignFormulaID.GIVEN_ADDITIONAL_VALUE,
+                    TrafficSignFormulaID.VALUE_ADDITIONAL_VALUE_SPEED_SIGN,
+                    TrafficSignFormulaID.MAXIMAL_DISTANCE_FROM_LANELET,
+                    TrafficLightFormulaID.NON_ZERO_DURATION,
+                    TrafficLightFormulaID.UNIQUE_STATE_IN_CYCLE,
+                    TrafficLightFormulaID.CYCLE_STATE_COMBINATIONS,
+                    IntersectionFormulaID.INCOMING_INTERSECTION,
+                ],
+            ),
+        ]
+    )
+
+    _queue: PriorityQueue = dataclasses.field(default_factory=PriorityQueue)
+
+    def __post_init__(self):
+        # Builds the queue containing the specification groups ordered by their priorities.
+        for group in self.groups:
+            self._queue.put((group.priority, group.formulas))
+
+    def is_next_group(self) -> bool:
+        """
+        Checks whether a further group is contained by the queue.
+
+        :return: Boolean indicates whether a further group is contained.
+        """
+        return self._queue.qsize() != 0
+
+    def next_group(self) -> List[FormulaID]:
+        """
+        Returns the next group with the highest order in the current queue.
+
+        :return: Group of formula IDs.
+        """
+        return self._queue.get()[1]
+
+
+
+# FILE: crdesigner/verification_repairing/verification/hol/formula_collection.py
+from typing import Dict
+
+
+class GeneralFormulas:
+    formulas: Dict[str, str] = {
+                                   "unique_id_all": "!(E k2 in M. (k1 != k2 & el_id(k1) = el_id(k2))) || k1 in M",
+                               }
+    domains: Dict[str, str] = {}
+    subformulas: Dict[str, str] = {
+                                  }
+
+
+class LaneletFormulas:
+    formulas: Dict[str, str] = {
+                                   "same_vertices_size": "size(left_polyline(l)) = size(right_polyline(l)) || l in L",
+                                   "vertices_more_than_one": "(size(left_polyline(l)) > 1 & size(right_polyline(l)) > 1) || l in L",
+                                   "existence_left_adj": "(Has_left_adj_ref(l1)) -> E l2 in L. (Has_left_adj(l1, l2)) || l1 in L",
+                                   "existence_right_adj": "(Has_right_adj_ref(l1)) -> E l2 in L. (Has_right_adj(l1, l2)) || l1 in L",
+                                   "existence_predecessor": "E l2 in L. (lanelet_id(l2) = p_id) || l1 in L, p_id in predecessors(l1)",
+                                   "existence_successor": "E l2 in L. (lanelet_id(l2) = s_id) || l1 in L, s_id in successors(l1)",
+                                   "polylines_intersection": "!(Is_polylines_intersection(left_polyline(l), right_polyline(l))) || l in L",
+                                   "left_self_intersection": "!(Is_polyline_self_intersection(left_polyline(l))) || l in L",
+                                   "right_self_intersection": "!(Is_polyline_self_intersection(right_polyline(l))) || l in L",
+                                   "connections_predecessor": "(Has_predecessor(l1, l2)) -> are_predecessor_connections(l1, l2) || l1, l2 in L",
+                                   "connections_successor": "(Has_successor(l1, l2)) -> are_successor_connections(l1, l2) || l1, l2 in L",
+                                   "potential_predecessor": "(!(Has_predecessor(l1, l2))) -> !(are_predecessor_connections(l1, l2)) || l1, l2 in L",
+                                   "potential_successor": "(!(Has_successor(l1, l2))) -> !(are_successor_connections(l1, l2)) || l1, l2 in L",
+                                   "non_predecessor_as_successor": "(lanelet_id(l1) != lanelet_id(l2) & Has_successor(l1, l2) & !(Has_predecessor(l1, l2))) -> !(are_predecessor_connections(l1, l2)) || l1, l2 in L",
+                                   "non_successor_as_predecessor": "(lanelet_id(l1) != lanelet_id(l2) & Has_predecessor(l1, l2) & !(Has_successor(l1, l2))) -> !(are_successor_connections(l1, l2)) || l1, l2 in L",
+                                   "referenced_intersecting_lanelets": "(Are_intersected_lanelets(l1, l2)) -> (Has_left_adj(l1, l2) | Has_right_adj(l1, l2) | Has_predecessor(l1, l2) | Has_successor(l1, l2)) || l1, l2 in L",
+                                   "existence_traffic_signs": "E t in TS. (traffic_sign_id(t) = t_id) || l in L, t_id in traffic_signs(l)",
+                                   "existence_traffic_lights": "E t in TL. (traffic_light_id(t) = t_id) || l in L, t_id in traffic_lights(l)",
+                                   "zero_or_two_points_stop_line": "(Has_stop_line(l)) -> (Has_start_point(stop_line(l)) <-> Has_end_point(stop_line(l))) || l in L",
+                                   "polylines_left_same_dir_parallel_adj": "(Has_left_adj(l1, l2) & Is_adj_type(l1, l2, \"parallel\") & Is_left_adj_same_direction(l1, l2)) -> Are_similar_polylines(left_polyline(l1), right_polyline(l2)) || l1, l2 in L",
+                                   "polylines_right_same_dir_parallel_adj": "(Has_right_adj(l1, l2) & Is_adj_type(l1, l2, \"parallel\") & Is_right_adj_same_direction(l1, l2)) -> Are_similar_polylines(right_polyline(l1), left_polyline(l2)) || l1, l2 in L",
+                                   "polylines_left_opposite_dir_parallel_adj": "(Has_left_adj(l1, l2) & Is_adj_type(l1, l2, \"parallel\") & Is_left_adj_opposite_direction(l1, l2)) -> Are_similar_polylines(reverse(left_polyline(l1)), left_polyline(l2)) || l1, l2 in L",
+                                   "polylines_right_opposite_dir_parallel_adj": "(Has_right_adj(l1, l2) & Is_adj_type(l1, l2, \"parallel\") & Is_right_adj_opposite_direction(l1, l2)) -> Are_similar_polylines(reverse(right_polyline(l1)), right_polyline(l2)) || l1, l2 in L",
+                                   "potential_left_same_dir_parallel_adj": "(Are_similar_polylines(left_polyline(l1), right_polyline(l2))) -> (Has_left_adj(l1, l2) & Is_adj_type(l1, l2, \"parallel\") & Is_left_adj_same_direction(l1, l2)) || l1, l2 in L",
+                                   "potential_right_same_dir_parallel_adj": "(Are_similar_polylines(right_polyline(l1), left_polyline(l2))) -> (Has_right_adj(l1, l2) & Is_adj_type(l1, l2, \"parallel\") & Is_right_adj_same_direction(l1, l2)) || l1, l2 in L",
+                                   "potential_left_opposite_dir_parallel_adj": "(Are_similar_polylines(reverse(left_polyline(l1)), left_polyline(l2))) -> (Has_left_adj(l1, l2) & Is_adj_type(l1, l2, \"parallel\") & !(Is_left_adj_same_direction(l1, l2))) || l1, l2 in L",
+                                   "potential_right_opposite_dir_parallel_adj": "(Are_similar_polylines(reverse(right_polyline(l1)), right_polyline(l2))) -> (Has_right_adj(l1, l2) & Is_adj_type(l1, l2, \"parallel\") & Is_right_adj_opposite_direction(l1, l2)) || l1, l2 in L",
+                                   "connections_left_merging_adj": "(Has_left_adj(l1, l2) & Is_adj_type(l1, l2, \"merging\")) -> are_left_merging_adj_connections(l1, l2) || l1, l2 in L",
+                                   "connections_right_merging_adj": "(Has_right_adj(l1, l2) & Is_adj_type(l1, l2, \"merging\")) -> are_right_merging_adj_connections(l1, l2) || l1, l2 in L",
+                                   "potential_left_merging_adj": "(are_left_merging_adj_connections(l1, l2)) -> (Has_left_adj(l1, l2) & Is_adj_type(l1, l2, \"merging\")) || l1, l2 in L",
+                                   "potential_right_merging_adj": "(are_right_merging_adj_connections(l1, l2)) -> (Has_right_adj(l1, l2) & Is_adj_type(l1, l2, \"merging\")) || l1, l2 in L",
+                                   "connections_left_forking_adj": "(Has_left_adj(l1, l2) & Is_adj_type(l1, l2, \"forking\")) -> are_left_forking_adj_connections(l1, l2) || l1, l2 in L",
+                                   "connections_right_forking_adj": "(Has_right_adj(l1, l2) & Is_adj_type(l1, l2, \"forking\")) -> are_right_forking_adj_connections(l1, l2) || l1, l2 in L",
+                                   "potential_left_forking_adj": "(are_left_forking_adj_connections(l1, l2)) -> (Has_left_adj(l1, l2) & Is_adj_type(l1, l2, \"forking\")) || l1, l2 in L",
+                                   "potential_right_forking_adj": "(are_right_forking_adj_connections(l1, l2)) -> (Has_right_adj(l1, l2) & Is_adj_type(l1, l2, \"forking\")) || l1, l2 in L",
+                                   "included_stop_line_traffic_signs": "(Has_stop_line(l)) -> (A s_id1 in stop_line_traffic_signs(stop_line(l)). (traffic_sign_id(s) = s_id1 -> E s_id2 in traffic_signs(l). s_id1 = s_id2)) || l in L, s in TS",
+                                   "included_stop_line_traffic_lights": "(Has_stop_line(l)) -> (A t_id1 in stop_line_traffic_lights(stop_line(l)). (traffic_light_id(t) = t_id1 -> E t_id2 in traffic_lights(l). t_id1 = t_id2)) || l in L, t in TL",
+                                   "stop_line_references": "(Has_stop_line(l)) -> (size(stop_line_traffic_signs(stop_line(l))) > 0 | size(stop_line_traffic_lights(stop_line(l))) > 0) || l in L",
+                                   "conflicting_lanelet_directions": "lanelet_id(l1) != lanelet_id(l2) & !(Has_left_adj(l1, l2) | Has_left_adj(l2, l1) | Has_right_adj(l1, l2) | Has_right_adj(l2, l1)) & !(are_left_merging_adj_connections(l1, l2) | are_right_merging_adj_connections(l1, l2) | are_left_forking_adj_connections(l1, l2) | are_right_forking_adj_connections(l1, l2) | are_left_merging_adj_connections(l2, l1) | are_right_merging_adj_connections(l2, l1) | are_left_forking_adj_connections(l2, l1) | are_right_forking_adj_connections(l2, l1)) -> (!(are_conflicting_connections(l1, l2)))|| l1, l2 in L",
+                                   "left_right_boundary_assignment": "Is_correct_left_right_boundary_assignment(l) || l in L",
+                               }
+    domains: Dict[str, str] = {}
+    subformulas: Dict[str, str] = {
+                                      "are_predecessor_connections(l1, l2)": "Are_equal_vertices(start_vertex(left_polyline(l1)), end_vertex(left_polyline(l2))) & Are_equal_vertices(start_vertex(right_polyline(l1)), end_vertex(right_polyline(l2)))",
+                                      "are_successor_connections(l1, l2)": "Are_equal_vertices(end_vertex(left_polyline(l1)), start_vertex(left_polyline(l2))) & Are_equal_vertices(end_vertex(right_polyline(l1)), start_vertex(right_polyline(l2)))",
+                                      "are_conflicting_connections(l1, l2)": "Are_equal_vertices(end_vertex(left_polyline(l1)), end_vertex(right_polyline(l2))) & Are_equal_vertices(end_vertex(right_polyline(l1)), end_vertex(left_polyline(l2))) | Are_equal_vertices(end_vertex(left_polyline(l1)), end_vertex(left_polyline(l2))) & Are_equal_vertices(end_vertex(right_polyline(l1)), end_vertex(right_polyline(l2)))",
+                                      "are_left_merging_adj_connections(l1, l2)": "lanelet_id(l1) != lanelet_id(l2) & Are_equal_vertices(end_vertex(left_polyline(l1)), end_vertex(left_polyline(l2))) & Are_equal_vertices(end_vertex(right_polyline(l1)), end_vertex(right_polyline(l2))) & Are_equal_vertices(start_vertex(left_polyline(l1)), start_vertex(right_polyline(l2)))",
+                                      "are_right_merging_adj_connections(l1, l2)": "lanelet_id(l1) != lanelet_id(l2) & Are_equal_vertices(end_vertex(left_polyline(l1)), end_vertex(left_polyline(l2))) & Are_equal_vertices(end_vertex(right_polyline(l1)), end_vertex(right_polyline(l2))) & Are_equal_vertices(start_vertex(right_polyline(l1)), start_vertex(left_polyline(l2)))",
+                                      "are_left_forking_adj_connections(l1, l2)": "lanelet_id(l1) != lanelet_id(l2) & Are_equal_vertices(start_vertex(left_polyline(l1)), start_vertex(left_polyline(l2))) & Are_equal_vertices(start_vertex(right_polyline(l1)), start_vertex(right_polyline(l2))) & Are_equal_vertices(end_vertex(left_polyline(l1)), end_vertex(right_polyline(l2)))",
+                                      "are_right_forking_adj_connections(l1, l2)": "lanelet_id(l1) != lanelet_id(l2) & Are_equal_vertices(start_vertex(left_polyline(l1)), start_vertex(left_polyline(l2))) & Are_equal_vertices(start_vertex(right_polyline(l1)), start_vertex(right_polyline(l2))) & Are_equal_vertices(end_vertex(right_polyline(l1)), end_vertex(left_polyline(l2)))",
+                                  }
+
+
+class TrafficSignFormulas:
+    formulas: Dict[str, str] = {
+                                   "at_least_one_traffic_sign_element": "size(traffic_sign_elements(t)) > 0 || t in TS",
+                                   "referenced_traffic_sign": "E l in L. (Has_traffic_sign(l, t)) || t in TS",
+                                   "maximal_distance_from_lanelet": "E l in L. (Has_traffic_sign(l, t) & distance_to_lanelet(t, l) <= 10.0) || t in TS",
+                               }
+    domains: Dict[str, str] = {}
+    subformulas: Dict[str, str] = {
+                                  }
+
+
+class TrafficLightFormulas:
+    formulas: Dict[str, str] = {
+                                   "at_least_one_cycle_element": "size(cycle_elements(t)) > 0 || t in TL",
+                                   "referenced_traffic_light": "E l in L. Has_traffic_light(l, t) || t in TL",
+                                   "traffic_light_per_incoming": "(traffic_light_id(t) = t_id & Has_traffic_light(l1, t) & Has_traffic_light(l2, t)) -> E i in I, e in IE. (Has_incoming_element(i, e) & Has_incoming_lanelet(e, l1) & Has_incoming_lanelet(e, l2)) || t in TS, l1 in L, l2 in L, t_id in traffic_lights(l1)",
+                               }
+    domains: Dict[str, str] = {}
+    subformulas: Dict[str, str] = {
+                                  }
+
+
+class IntersectionFormulas:
+    formulas: Dict[str, str] = {
+                               }
+    # formulas: Dict[str, str] = {'at_least_two_incoming_elements': 'size(incoming_elements(i)) > 1 || i in I',
+    #
+    #                             'at_least_one_incoming_lanelet': '(Has_incoming_element(i, e)) -> size('
+    #                                                              'incoming_lanelets(e)) > 0 || i in I, '
+    #                                                              'e in IG',
+    #
+    #                             'existence_incoming_lanelets': '(Has_incoming_element(i, e)) -> '
+    #                                                            'E l in L. (lanelet_id(l) = l_id) || i in I, e in IG, '
+    #                                                            'l_id in incoming_lanelets(e)'}
+    domains: Dict[str, str] = {}
+    subformulas: Dict[str, str] = {
+                                  }
+
+
+# FILE: crdesigner/verification_repairing/verification/hol/functions/predicates/lanelet_predicates.py
+from __future__ import annotations
+import itertools
+import logging
+import warnings
+from collections import Counter
+from typing import List, Set
+
+
+import numpy as np
+from shapely import LineString
+from shapely.errors import GEOSException
+from similaritymeasures import similaritymeasures
+
+from commonroad.scenario.lanelet import Lanelet, StopLine
+from commonroad.scenario.traffic_light import TrafficLight
+from commonroad.scenario.traffic_sign import TrafficSign
+from commonroad_clcs.clcs import CurvilinearCoordinateSystem
+from commonroad_clcs.config import CLCSParams, ResamplingParams
+from commonroad_clcs.util import (
+    chaikins_corner_cutting,
+    compute_orientation_from_polyline,
+    resample_polyline,
+)
+from crdesigner.common.config.lanelet2_config import Lanelet2Config
+
+log3d = logging.getLogger("crdesigner.verification.3d")
+
+# ───────────────────── simple attribute helpers ──────────────────────
+def lanelet_id(lanelet: Lanelet) -> int:
+    return lanelet.lanelet_id
+
+
+def left_adj(lanelet: Lanelet) -> int:
+    return lanelet.adj_left
+
+
+def right_adj(lanelet: Lanelet) -> int:
+    return lanelet.adj_right
+
+
+def left_polyline(lanelet: Lanelet) -> np.ndarray:
+    return lanelet.left_vertices
+
+
+def right_polyline(lanelet: Lanelet) -> np.ndarray:
+    return lanelet.right_vertices
+
+
+def start_vertex(polyline: np.ndarray) -> np.ndarray:
+    return polyline[0]
+
+
+def end_vertex(polyline: np.ndarray) -> np.ndarray:
+    return polyline[-1]
+
+
+def traffic_signs(lanelet: Lanelet) -> Set[int]:
+    return lanelet.traffic_signs
+
+
+def traffic_lights(lanelet: Lanelet) -> Set[int]:
+    return lanelet.traffic_lights
+
+
+def stop_line(lanelet: Lanelet) -> StopLine:
+    return lanelet.stop_line
+
+
+def predecessors(lanelet: Lanelet) -> List[int]:
+    return lanelet.predecessor
+
+
+def successors(lanelet: Lanelet) -> List[int]:
+    return lanelet.successor
+
+
+def stop_line_traffic_signs(stop_line: StopLine) -> Set[int]:
+    return stop_line.traffic_sign_ref
+
+
+def stop_line_traffic_lights(stop_line: StopLine) -> Set[int]:
+    return stop_line.traffic_light_ref
+
+
+# ────────────────────── reference presence predicates ────────────────
+def has_left_adj_ref(lanelet: Lanelet) -> bool:
+    return lanelet.adj_left is not None
+
+
+def has_right_adj_ref(lanelet: Lanelet) -> bool:
+    return lanelet.adj_right is not None
+
+
+def has_left_adj(lanelet_0: Lanelet, lanelet_1: Lanelet) -> bool:
+    return lanelet_0.adj_left == lanelet_1.lanelet_id
+
+
+def has_right_adj(lanelet_0: Lanelet, lanelet_1: Lanelet) -> bool:
+    return lanelet_0.adj_right == lanelet_1.lanelet_id
+
+
+# ────────────────────── adjacency geometry predicates ────────────────
+def is_left_adj_same_direction(
+    lanelet: Lanelet,
+    adj_lanelet: Lanelet,
+    *,
+    max_z_diff: float = 0.25,
+) -> bool:
+    return (
+        lanelet.adj_left_same_direction
+        and np.linalg.norm(
+            lanelet.left_vertices[0][:2] - adj_lanelet.right_vertices[0][:2]
+        )
+        < 1
+        and np.linalg.norm(
+            lanelet.left_vertices[-1][:2] - adj_lanelet.right_vertices[-1][:2]
+        )
+        < 1
+        and _z_close(
+            lanelet.left_vertices[0], adj_lanelet.right_vertices[0], max_z_diff
+        )
+        and _z_close(
+            lanelet.left_vertices[-1], adj_lanelet.right_vertices[-1], max_z_diff
+        )
+    )
+
+
+def is_left_adj_opposite_direction(
+    lanelet: Lanelet,
+    adj_lanelet: Lanelet,
+    *,
+    max_z_diff: float = 0.25,
+) -> bool:
+    return (
+        not lanelet.adj_left_same_direction
+        and np.linalg.norm(
+            lanelet.left_vertices[0][:2] - adj_lanelet.left_vertices[-1][:2]
+        )
+        < 1
+        and np.linalg.norm(
+            lanelet.left_vertices[-1][:2] - adj_lanelet.left_vertices[0][:2]
+        )
+        < 1
+        and _z_close(
+            lanelet.left_vertices[0], adj_lanelet.left_vertices[-1], max_z_diff
+        )
+        and _z_close(
+            lanelet.left_vertices[-1], adj_lanelet.left_vertices[0], max_z_diff
+        )
+    )
+
+
+def is_right_adj_same_direction(
+    lanelet: Lanelet,
+    adj_lanelet: Lanelet,
+    *,
+    max_z_diff: float = 0.25,
+) -> bool:
+    return (
+        lanelet.adj_right_same_direction
+        and np.linalg.norm(
+            lanelet.right_vertices[0][:2] - adj_lanelet.left_vertices[0][:2]
+        )
+        < 1
+        and np.linalg.norm(
+            lanelet.right_vertices[-1][:2] - adj_lanelet.left_vertices[-1][:2]
+        )
+        < 1
+        and _z_close(
+            lanelet.right_vertices[0], adj_lanelet.left_vertices[0], max_z_diff
+        )
+        and _z_close(
+            lanelet.right_vertices[-1], adj_lanelet.left_vertices[-1], max_z_diff
+        )
+    )
+
+
+def is_right_adj_opposite_direction(
+    lanelet: Lanelet,
+    adj_lanelet: Lanelet,
+    *,
+    max_z_diff: float = 0.25,
+) -> bool:
+    return (
+        not lanelet.adj_right_same_direction
+        and np.linalg.norm(
+            lanelet.right_vertices[0][:2] - adj_lanelet.right_vertices[-1][:2]
+        )
+        < 1
+        and np.linalg.norm(
+            lanelet.right_vertices[-1][:2] - adj_lanelet.right_vertices[0][:2]
+        )
+        < 1
+        and _z_close(
+            lanelet.right_vertices[0], adj_lanelet.right_vertices[-1], max_z_diff
+        )
+        and _z_close(
+            lanelet.right_vertices[-1], adj_lanelet.right_vertices[0], max_z_diff
+        )
+    )
+
+
+def _z_close(v0: np.ndarray, v1: np.ndarray, max_diff: float) -> bool:
+    """Return *True* if |z₀−z₁| ≤ max_diff or vertices are 2-D."""
+    if v0.shape[0] < 3 or v1.shape[0] < 3:
+        return True
+    return abs(v0[2] - v1[2]) <= max_diff
+
+
+def is_correct_left_right_boundary_assignment(lanelet: Lanelet) -> bool:
+    return not _wrong_left_right_boundary_side(
+        lanelet.center_vertices, lanelet.left_vertices, lanelet.right_vertices
+    )
+
+
+def _wrong_left_right_boundary_side(
+    center_vertices: np.ndarray,
+    left_vertices: np.ndarray,
+    right_vertices: np.ndarray,
+    config: Lanelet2Config = Lanelet2Config(),
+    *,
+    max_z_diff: float = 0.25,
+) -> bool:
+    """Detect whether left/right boundaries are swapped."""
+    left, right = None, None
+
+    center_vertices = chaikins_corner_cutting(
+        center_vertices, config.chaikins_initial_refinements
+    )
+    center_vertices = resample_polyline(
+        center_vertices, config.resampling_initial_step
+    )
+
+    for eps, max_polyline_resampling_step in itertools.product(
+        config.eps2_values, config.max_polyline_resampling_step_values
+    ):
+        try:
+            if len(center_vertices) == 2:
+                center_vertices = np.insert(
+                    center_vertices,
+                    1,
+                    (center_vertices[0] + center_vertices[1]) / 2,
+                    axis=0,
+                )
+            cpar = CLCSParams(
+                eps2=eps,
+                resampling=ResamplingParams(
+                    fixed_step=max_polyline_resampling_step,
+                    interpolation_type="linear",
+                ),
+            )
+            ccs = CurvilinearCoordinateSystem(center_vertices, cpar, False)
+            left = np.array(
+                [ccs.convert_to_curvilinear_coords(v[0], v[1])[1] for v in left_vertices]
+            )
+            right = np.array(
+                [ccs.convert_to_curvilinear_coords(v[0], v[1])[1] for v in right_vertices]
+            )
+            break  # jump out of the loop if successful
+        except Exception:
+            center_vertices = chaikins_corner_cutting(
+                center_vertices, config.chaikins_repeated_refinements
+            )
+            center_vertices = resample_polyline(
+                center_vertices, config.resampling_repeated_step
+            )
+            continue
+
+    # ---- fallback handling ----
+    if left is None or right is None:
+        warnings.warn(
+            "Could not project lanelet boundaries to the curvilinear "
+            "coordinate system – treating assignment as WRONG."
+        )
+        return True  # indicates "possible swap" detected, hand over to upper layer for processing
+
+    # Original decision logic
+    return (sum(left - right >= 0) / len(left)) < config.perc_vert_wrong_side
+
+
+
+# ────────────────────── topology predicates ───────────────────────────
+def has_predecessor(lanelet_0: Lanelet, lanelet_1: Lanelet) -> bool:
+    return lanelet_1.lanelet_id in lanelet_0.predecessor
+
+
+def has_successor(lanelet_0: Lanelet, lanelet_1: Lanelet) -> bool:
+    return lanelet_1.lanelet_id in lanelet_0.successor
+
+
+# ────────────────────── member / reference predicates ─────────────────
+def has_traffic_sign(lanelet: Lanelet, traffic_sign: TrafficSign) -> bool:
+    return traffic_sign.traffic_sign_id in lanelet.traffic_signs
+
+
+def has_traffic_light(lanelet: Lanelet, traffic_light: TrafficLight) -> bool:
+    return traffic_light.traffic_light_id in lanelet.traffic_lights
+
+
+# ────────────────────── geometry predicates (z-aware) ─────────────────
+def is_polylines_intersection(
+    polyline_0: np.ndarray,
+    polyline_1: np.ndarray,
+
+    min_clearance: float = 0.25,
+) -> bool:
+    line_0 = [(x, y, z[0]) if z else (x, y) for x, y, *z in polyline_0]
+    line_1 = [(x, y, z[0]) if z else (x, y) for x, y, *z in polyline_1]
+    result = LineString(line_0).intersection(LineString(line_1))
+
+    if result.is_empty:
+        return False
+
+    # if clearance requested & data is 3-D, measure Δz at closest vertices
+    if (
+        min_clearance > 0
+        and polyline_0.shape[1] == 3
+        and polyline_1.shape[1] == 3
+    ):
+        inter_xy = np.array(result.coords[0][:2])
+        z0 = polyline_0[
+            np.argmin(np.linalg.norm(polyline_0[:, :2] - inter_xy, axis=1))
+        ][2]
+        z1 = polyline_1[
+            np.argmin(np.linalg.norm(polyline_1[:, :2] - inter_xy, axis=1))
+        ][2]
+        if abs(z0 - z1) >= min_clearance:
+            return False
+    return True
+
+
+def is_polyline_self_intersection(
+    polyline: np.ndarray,
+
+    min_clearance: float = 0.25,
+) -> bool:
+    line = [(x, y, z[0]) if z else (x, y) for x, y, *z in polyline]
+    orientation = compute_orientation_from_polyline(polyline[:, :2])
+    orientation_dif = [
+        abs(orientation[i + 1] - orientation[i])
+        for i in range(len(orientation) - 1)
+    ]
+    line_string = LineString(line)
+
+    base_cond = (
+        (not line_string.is_simple)
+        or Counter(line).most_common(1)[0][1] > 1
+        or np.isclose(np.max(orientation_dif), np.pi)
+    )
+    if not base_cond:
+        return False
+
+    if min_clearance > 0 and polyline.shape[1] == 3:
+        z_vals = polyline[:, 2]
+        if (z_vals.max() - z_vals.min()) >= min_clearance:
+            return False
+    return True
+
+
+def are_equal_vertices(
+    vertex_0: np.ndarray,
+    vertex_1: np.ndarray,
+    *,
+    tol_xy: float = 1e-5,
+    tol_z: float = 0.01,
+) -> bool:
+    xy_close = np.linalg.norm(vertex_0[:2] - vertex_1[:2]) < tol_xy
+    if vertex_0.shape[0] < 3 or vertex_1.shape[0] < 3:
+        return xy_close
+    return xy_close and abs(vertex_0[2] - vertex_1[2]) < tol_z
+
+from shapely.validation import make_valid     # shapely>=2
+from shapely.errors import GEOSException
+def _clean_poly(poly):
+    if not poly.is_valid:
+        try:
+            return make_valid(poly)           # try to fix
+        except Exception:
+            return poly.buffer(0)             # classic fallback
+    return poly
+def are_intersected_lanelets(
+    lanelet_0: Lanelet,
+    lanelet_1: Lanelet,
+
+    min_clearance: float = 0.0,
+) -> bool:
+    """
+    Returns **True** if the lanelets *do not* geometrically clash in
+    an invalid way (legacy semantics preserved).
+    """
+    p0 = _clean_poly(lanelet_0.polygon.shapely_object)
+    p1 = _clean_poly(lanelet_1.polygon.shapely_object)
+
+    try:
+        result = p0.intersection(p1, grid_size=0.05)  # given grid size can reduce precision issues
+    except GEOSException as e:
+        logging.warning(
+            "GEOSException between lanelet %s and %s: %s – treating as 'intersected' so that validator flags it.",
+            lanelet_0.lanelet_id, lanelet_1.lanelet_id, e)
+        return True      # let validator think "intersected" so that it flags it for later repair
+    
+    if (
+        min_clearance > 0
+        and lanelet_0.center_vertices.shape[1] == 3
+        and lanelet_1.center_vertices.shape[1] == 3
+    ):
+        z0 = np.mean(lanelet_0.center_vertices[:, 2])
+        z1 = np.mean(lanelet_1.center_vertices[:, 2])
+        if abs(z0 - z1) >= min_clearance:
+            return True          # vertical clearance is sufficient, consider as "not intersected"
+
+    return not result.is_empty
+
+
+def has_stop_line(lanelet: Lanelet):
+    return lanelet.stop_line is not None
+
+
+def has_start_point(stop_line: StopLine) -> bool:
+    return stop_line.start is not None
+
+
+def has_end_point(stop_line: StopLine) -> bool:
+    return stop_line.end is not None
+
+
+def are_similar_polylines(polyline_0: np.ndarray, polyline_1: np.ndarray) -> bool:
+    if not (
+        (np.linalg.norm(polyline_0[0] - polyline_1[0]) < 1)
+        and (np.linalg.norm((polyline_0[-1] - polyline_1[-1]) < 1))
+        or (
+            (np.linalg.norm(polyline_0[0] - polyline_1[-1]) < 1)
+            and (np.linalg.norm(polyline_0[-1] - polyline_1[0]) < 1)
+        )
+    ):
+        return False
+    if (
+        Lanelet._compute_polyline_cumsum_dist([polyline_0])[-1]
+        - Lanelet._compute_polyline_cumsum_dist([polyline_1])[-1]
+        > 50
+    ):
+        return False
+    if polyline_0.shape[0] == polyline_1.shape[0] and all(
+        [
+            dist < 0.01
+            for dist in np.linalg.norm(polyline_0 - polyline_1, axis=1)
+        ]
+    ):
+        return True
+    return similaritymeasures.frechet_dist(polyline_0, polyline_1) < 1e-6
+
+
+def is_adj_type(
+    lanelet: Lanelet,
+    adj: Lanelet,
+    exp_adj_type: str,
+    *,
+    max_z_diff: float = 0.25,
+) -> bool:
+    """Classify adjacency considering z-distance."""
+    parallel, merging, forking = "parallel", "merging", "forking"
+    is_left = lanelet.adj_left == adj.lanelet_id
+    is_same_dir = (
+        lanelet.adj_left_same_direction
+        if is_left
+        else lanelet.adj_right_same_direction
+    )
+
+    # stacked in z → automatically parallel
+    if not _z_close(
+        lanelet.center_vertices[0], adj.center_vertices[0], max_z_diff
+    ):
+        return exp_adj_type == parallel
+
+    if not is_same_dir:
+        return exp_adj_type == parallel
+
+    # analyse xy-shape distances
+    if is_left:
+        adj_poly = adj.right_vertices
+    else:
+        adj_poly = adj.left_vertices
+    left_poly = lanelet.left_vertices
+    right_poly = lanelet.right_vertices
+    adj_size = len(adj_poly)
+    lan_size = len(left_poly)
+
+    left_start_dist = np.linalg.norm(left_poly[0] - adj_poly[0])
+    left_end_dist = np.linalg.norm(left_poly[lan_size - 1] - adj_poly[adj_size - 1])
+    right_start_dist = np.linalg.norm(right_poly[0] - adj_poly[0])
+    right_end_dist = np.linalg.norm(right_poly[lan_size - 1] - adj_poly[adj_size - 1])
+
+    if left_start_dist > right_start_dist and left_end_dist < right_end_dist:
+        adj_type = forking if is_left else merging
+    elif left_start_dist < right_start_dist and left_end_dist > right_end_dist:
+        adj_type = merging if is_left else forking
+    else:
+        adj_type = parallel
+    return adj_type == exp_adj_type
+

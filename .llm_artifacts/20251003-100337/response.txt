@@ -1,0 +1,83 @@
+```yaml
+antlr_patch: "NO_CHANGE"
+python_patch: |
+    --- crdesigner/verification_repairing/verification/formula_ids.py
+    +++ crdesigner/verification_repairing/verification/formula_ids.py
+    @@ -<old>,<n> +<new>,<m> @@
+     <BEFORE x6>
+    +    MIN_VERTICAL_CLEARANCE = "min_vertical_clearance"
+     <AFTER x6>
+
+    --- crdesigner/verification_repairing/verification/groups_handler.py
+    +++ crdesigner/verification_repairing/verification/groups_handler.py
+    @@ -<old>,<n> +<new>,<m> @@
+     <BEFORE x6>
+    +                    LaneletFormulaID.MIN_VERTICAL_CLEARANCE,
+     <AFTER x6>
+
+    --- crdesigner/verification_repairing/verification/hol/formula_collection.py
+    +++ crdesigner/verification_repairing/verification/hol/formula_collection.py
+    @@ -<old>,<n> +<new>,<m> @@
+     <BEFORE x6>   # inside LaneletFormulas.formulas
+    +                "min_vertical_clearance": "!(Is_vertical_clearance_too_low(l1, l2)) || l1, l2 in L",
+     <AFTER x6>
+
+    --- crdesigner/verification_repairing/verification/hol/functions/predicates/lanelet_predicates.py
+    +++ crdesigner/verification_repairing/verification/hol/functions/predicates/lanelet_predicates.py
+    @@ -<old>,<n> +<new>,<m> @@
+     <BEFORE x6>
+    +def is_vertical_clearance_too_low(lanelet_0: Lanelet, lanelet_1: Lanelet, *, min_clearance_m: float = 8.0) -> bool:
+    +    try:
+    +        if lanelet_0.center_vertices.shape[1] < 3 or lanelet_1.center_vertices.shape[1] < 3:
+    +            return False
+    +        z0 = np.mean(lanelet_0.center_vertices[:, 2])
+    +        z1 = np.mean(lanelet_1.center_vertices[:, 2])
+    +        return abs(z0 - z1) < min_clearance_m
+    +    except Exception as e:
+    +        log3d.warning("Exception in vertical clearance check: %s", e)
+    +        return True
+     <AFTER x6>
+
+family: vertical_clearance
+rule_key: min_vertical_clearance
+enum_name: MIN_VERTICAL_CLEARANCE
+predicate_name: is_vertical_clearance_too_low
+
+ops:
+  - type: add_enum_member
+    file: crdesigner/verification_repairing/verification/formula_ids.py
+    enum_class: LaneletFormulaID
+    name: MIN_VERTICAL_CLEARANCE
+    value: min_vertical_clearance
+
+  - type: add_to_group
+    file: crdesigner/verification_repairing/verification/groups_handler.py
+    insert_near_anchor: LaneletFormulaID.EXISTENCE_SUCCESSOR
+    add: LaneletFormulaID.MIN_VERTICAL_CLEARANCE
+
+  - type: upsert_formula_mapping
+    file: crdesigner/verification_repairing/verification/hol/formula_collection.py
+    key: min_vertical_clearance
+    value: "!(Is_vertical_clearance_too_low(l1, l2)) || l1, l2 in L"
+
+  - type: ensure_predicate
+    file: crdesigner/verification_repairing/verification/hol/functions/predicates/lanelet_predicates.py
+    name: is_vertical_clearance_too_low
+    code: |
+      def is_vertical_clearance_too_low(lanelet_0: Lanelet, lanelet_1: Lanelet, *, min_clearance_m: float = 8.0) -> bool:
+          try:
+              if lanelet_0.center_vertices.shape[1] < 3 or lanelet_1.center_vertices.shape[1] < 3:
+                  return False
+              z0 = np.mean(lanelet_0.center_vertices[:, 2])
+              z1 = np.mean(lanelet_1.center_vertices[:, 2])
+              return abs(z0 - z1) < min_clearance_m
+          except Exception as e:
+              log3d.warning("Exception in vertical clearance check: %s", e)
+              return True
+```
+
+### Post-check List
+
+- **Consistency**: The identifiers `MIN_VERTICAL_CLEARANCE`, `min_vertical_clearance`, and `is_vertical_clearance_too_low` are consistent and appear in the expected places.
+- **Formula Mapping**: The value is a double-quoted single line and placed inside `LaneletFormulas.formulas`.
+- **Predicate**: The predicate is pure, deterministic, handles missing Z by passing, and includes guards for exceptions.
